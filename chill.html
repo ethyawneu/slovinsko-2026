@@ -1,0 +1,3255 @@
+<!doctype html>
+<html lang="cs">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Slovinsko Chill 2026 — Vila s bazénem v Brdě</title>
+        <meta
+            name="description"
+            content="Klidnější verze rodinné dovolené 2026: 14 dní, 13 nocí, jeden hlavní cíl — privátní vila s bazénem ve vinařské Goriški Brdě. Bazén, gril, víno, hudba."
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+            crossorigin=""
+        />
+        <script
+            src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""
+        ></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+        <style>
+            :root {
+                --cream: #f7f1e3;
+                --paper: #fbf6e8;
+                --paper-warm: #f5ebd3;
+                --ink: #1f2622;
+                --ink-soft: #4a5550;
+                --ink-faded: #7c857f;
+                --rule: #d8cfb8;
+                --rule-soft: #e8dfc8;
+                --amber: #b8722c;
+                --olive: #5c6b2e;
+                --sea: #2a6276;
+                --alpine: #2e5f4e;
+                --slate: #595e5c;
+                --terracotta: #a14f2c;
+                --terracotta-bg: #f0dace;
+                --gold: #c99a3d;
+                --vine: #6e2b4e;
+                --vine-bg: #ebd9df;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            html {
+                scroll-behavior: smooth;
+                scroll-padding-top: 72px;
+            }
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                background: var(--cream);
+                color: var(--ink);
+                font-family: "IBM Plex Sans", sans-serif;
+                font-weight: 400;
+                line-height: 1.6;
+                -webkit-font-smoothing: antialiased;
+            }
+            body {
+                background-image:
+                    radial-gradient(
+                        circle at 12% 18%,
+                        rgba(110, 43, 78, 0.05) 0%,
+                        transparent 40%
+                    ),
+                    radial-gradient(
+                        circle at 88% 78%,
+                        rgba(46, 95, 78, 0.04) 0%,
+                        transparent 40%
+                    );
+            }
+
+            .topnav {
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+                background: rgba(251, 246, 232, 0.96);
+                backdrop-filter: saturate(140%) blur(8px);
+                border-bottom: 1px solid var(--rule);
+            }
+            .topnav-inner {
+                max-width: 1080px;
+                margin: 0 auto;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 24px;
+                gap: 24px;
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 11px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+            }
+            .topnav-brand {
+                font-weight: 600;
+                color: var(--ink);
+                white-space: nowrap;
+            }
+            .topnav-brand em {
+                font-family: "Fraunces", serif;
+                font-style: italic;
+                text-transform: none;
+                letter-spacing: 0;
+                font-weight: 400;
+                color: var(--vine);
+                margin-left: 6px;
+            }
+            .topnav-links {
+                display: flex;
+                gap: 18px;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+            .topnav-links a {
+                color: var(--ink-soft);
+                text-decoration: none;
+                transition: color 0.2s ease;
+            }
+            .topnav-links a:hover {
+                color: var(--vine);
+            }
+            .topnav-links a.alt {
+                color: var(--ink-faded);
+                border-left: 1px solid var(--rule);
+                padding-left: 18px;
+            }
+            .topnav-links a.alt:hover {
+                color: var(--amber);
+            }
+
+            .page {
+                max-width: 1080px;
+                margin: 0 auto;
+                padding: 40px 48px 96px;
+                background: var(--paper);
+                box-shadow:
+                    0 0 0 1px var(--rule-soft),
+                    0 40px 80px -40px rgba(31, 38, 34, 0.15);
+                min-height: 100vh;
+            }
+
+            .masthead {
+                border-top: 3px solid var(--ink);
+                border-bottom: 1px solid var(--rule);
+                padding: 18px 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 11px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--ink-soft);
+            }
+            .masthead-volume {
+                color: var(--ink);
+                font-weight: 500;
+            }
+
+            .hero {
+                padding: 56px 0 32px;
+                border-bottom: 1px solid var(--rule);
+                margin-bottom: 40px;
+                text-align: center;
+            }
+            .hero-eyebrow {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 12px;
+                letter-spacing: 0.3em;
+                text-transform: uppercase;
+                color: var(--vine);
+                margin-bottom: 24px;
+            }
+            .hero-title {
+                font-family: "Fraunces", serif;
+                font-weight: 300;
+                font-size: clamp(48px, 8vw, 96px);
+                line-height: 0.95;
+                letter-spacing: -0.03em;
+                margin: 0 0 16px;
+                font-variation-settings:
+                    "opsz" 144,
+                    "SOFT" 50;
+            }
+            .hero-title em {
+                font-style: italic;
+                font-weight: 400;
+                color: var(--vine);
+            }
+            .hero-sub {
+                font-family: "Fraunces", serif;
+                font-style: italic;
+                font-weight: 300;
+                font-size: 21px;
+                color: var(--ink-soft);
+                margin: 0 auto 32px;
+                max-width: 660px;
+            }
+            .hero-stats {
+                display: flex;
+                justify-content: center;
+                gap: 48px;
+                margin-top: 36px;
+                flex-wrap: wrap;
+            }
+            .stat-num {
+                font-family: "Fraunces", serif;
+                font-weight: 400;
+                font-size: 36px;
+                line-height: 1;
+            }
+            .stat-label {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 10px;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                color: var(--ink-faded);
+                margin-top: 6px;
+            }
+
+            .section {
+                padding: 48px 0;
+                border-bottom: 1px solid var(--rule);
+                scroll-margin-top: 72px;
+            }
+            .section-eyebrow {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 11px;
+                letter-spacing: 0.25em;
+                text-transform: uppercase;
+                color: var(--vine);
+                margin-bottom: 12px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+            .section-eyebrow::before {
+                content: "";
+                width: 24px;
+                height: 1px;
+                background: var(--vine);
+            }
+            .section-title {
+                font-family: "Fraunces", serif;
+                font-weight: 400;
+                font-size: 40px;
+                letter-spacing: -0.02em;
+                line-height: 1.05;
+                margin: 0 0 8px;
+            }
+            .section-title em {
+                font-style: italic;
+                color: var(--vine);
+            }
+            .section-intro {
+                font-family: "Fraunces", serif;
+                font-style: italic;
+                font-weight: 300;
+                font-size: 19px;
+                line-height: 1.5;
+                color: var(--ink-soft);
+                margin: 0 0 28px;
+                max-width: 720px;
+            }
+
+            /* MANIFESTO */
+            .manifesto {
+                background: linear-gradient(
+                    135deg,
+                    var(--vine-bg) 0%,
+                    var(--paper-warm) 100%
+                );
+                border: 1px solid var(--vine);
+                border-left: 4px solid var(--vine);
+                padding: 36px 40px;
+                margin: 12px 0 8px;
+            }
+            .manifesto-row {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 24px;
+                margin-top: 12px;
+            }
+            .manifesto-item .icon {
+                font-family: "Fraunces", serif;
+                font-style: italic;
+                font-size: 32px;
+                color: var(--vine);
+                line-height: 1;
+                margin-bottom: 8px;
+            }
+            .manifesto-item .label {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 10px;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                color: var(--ink-faded);
+                margin-bottom: 4px;
+            }
+            .manifesto-item .desc {
+                font-size: 13px;
+                line-height: 1.5;
+                color: var(--ink-soft);
+            }
+
+            /* MAP */
+            .map-frame {
+                border: 1px solid var(--rule);
+                background: var(--paper-warm);
+                padding: 12px;
+                margin: 16px 0;
+                box-shadow: inset 0 0 0 1px var(--rule-soft);
+            }
+            #leaflet-map {
+                width: 100%;
+                height: 560px;
+                border: 1px solid var(--rule);
+                background: #e8e2d0;
+            }
+            .map-legend {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 18px;
+                margin-top: 14px;
+                padding: 10px 4px;
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 11px;
+                color: var(--ink-soft);
+                letter-spacing: 0.04em;
+            }
+            .map-legend-item {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .map-legend-dot {
+                width: 14px;
+                height: 14px;
+                border-radius: 50%;
+                border: 2px solid var(--paper);
+                box-shadow: 0 0 0 1px var(--ink);
+            }
+            .map-note {
+                margin-top: 4px;
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 11px;
+                color: var(--ink-faded);
+                letter-spacing: 0.04em;
+                text-align: center;
+            }
+            .leaflet-popup-content-wrapper {
+                border-radius: 4px;
+                background: var(--paper);
+                box-shadow: 0 6px 18px rgba(31, 38, 34, 0.18);
+            }
+            .leaflet-popup-content {
+                margin: 12px 16px;
+                font-family: "IBM Plex Sans", sans-serif;
+                font-size: 13px;
+                color: var(--ink-soft);
+                line-height: 1.5;
+            }
+            .leaflet-popup-content b {
+                font-family: "Fraunces", serif;
+                font-weight: 500;
+                font-size: 16px;
+                color: var(--ink);
+                display: block;
+                margin-bottom: 4px;
+            }
+            .leaflet-popup-content .pop-meta {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 11px;
+                color: var(--ink-faded);
+                margin-top: 6px;
+                padding-top: 6px;
+                border-top: 1px dashed var(--rule);
+            }
+            .leaflet-popup-tip {
+                background: var(--paper);
+            }
+
+            /* DISTANCE TABLE */
+            .distance-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 8px 0;
+                font-size: 14px;
+            }
+            .distance-table thead {
+                border-bottom: 2px solid var(--ink);
+            }
+            .distance-table th {
+                text-align: left;
+                padding: 10px 12px;
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 10px;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                font-weight: 500;
+                color: var(--ink);
+            }
+            .distance-table th.num,
+            .distance-table td.num {
+                text-align: right;
+                font-variant-numeric: tabular-nums;
+            }
+            .distance-table tbody tr {
+                border-bottom: 1px solid var(--rule-soft);
+            }
+            .distance-table tbody tr:last-child {
+                border-bottom: 1px solid var(--rule);
+            }
+            .distance-table td {
+                padding: 14px 12px;
+                color: var(--ink-soft);
+            }
+            .distance-table td:first-child {
+                font-family: "Fraunces", serif;
+                font-size: 16px;
+                color: var(--ink);
+            }
+            .distance-table .note {
+                display: block;
+                font-size: 12px;
+                color: var(--ink-faded);
+                margin-top: 2px;
+                font-style: italic;
+            }
+            .distance-table tfoot tr {
+                border-top: 2px solid var(--ink);
+            }
+            .distance-table tfoot td {
+                padding: 14px 12px;
+                font-family: "Fraunces", serif;
+                font-size: 17px;
+                font-weight: 500;
+                color: var(--ink);
+            }
+
+            .docs {
+                background: var(--paper-warm);
+                border: 1px solid var(--rule);
+                padding: 20px 24px;
+                margin: 16px 0 0;
+            }
+            .docs-title {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 10px;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                color: var(--ink-faded);
+                margin: 0 0 14px;
+                font-weight: 500;
+            }
+            .docs-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr 1fr;
+                gap: 16px;
+            }
+            .doc-flag {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 11px;
+                color: var(--ink-faded);
+                font-weight: 500;
+            }
+            .doc-name {
+                font-family: "Fraunces", serif;
+                font-size: 15px;
+                margin: 4px 0;
+            }
+            .doc-price {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 14px;
+                color: var(--alpine);
+                font-weight: 500;
+            }
+            .doc-note {
+                font-size: 11.5px;
+                color: var(--ink-soft);
+                margin-top: 4px;
+                line-height: 1.4;
+                font-style: italic;
+            }
+
+            /* FUEL CALC */
+            .fuel-calc {
+                background: linear-gradient(
+                    135deg,
+                    var(--paper-warm) 0%,
+                    var(--cream) 100%
+                );
+                border: 1px solid var(--rule);
+                border-left: 4px solid var(--vine);
+                padding: 28px 32px;
+                margin: 24px 0;
+            }
+            .fuel-header {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: baseline;
+                justify-content: space-between;
+                gap: 12px;
+                margin-bottom: 20px;
+                padding-bottom: 14px;
+                border-bottom: 1px dashed var(--rule);
+            }
+            .fuel-title {
+                font-family: "Fraunces", serif;
+                font-weight: 500;
+                font-size: 22px;
+                margin: 0;
+                color: var(--ink);
+                letter-spacing: -0.01em;
+            }
+            .fuel-title em {
+                font-style: italic;
+                color: var(--vine);
+            }
+            .fuel-sub {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 11px;
+                color: var(--ink-faded);
+                letter-spacing: 0.05em;
+            }
+            .fuel-controls {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 18px;
+                margin-bottom: 20px;
+            }
+            .fuel-input {
+                background: var(--paper);
+                padding: 12px 14px;
+                border: 1px solid var(--rule);
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+            .fuel-input label {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 10px;
+                color: var(--ink-faded);
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+            }
+            .fuel-input input[type="range"] {
+                width: 100%;
+                accent-color: var(--vine);
+            }
+            .fuel-input .value {
+                font-family: "Fraunces", serif;
+                font-weight: 500;
+                font-size: 18px;
+                color: var(--ink);
+            }
+            .fuel-input .value small {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 11px;
+                color: var(--ink-faded);
+                margin-left: 4px;
+                font-weight: normal;
+            }
+            .fuel-breakdown {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 12px;
+                margin-bottom: 16px;
+            }
+            .fuel-country {
+                background: var(--paper);
+                padding: 14px;
+                border: 1px solid var(--rule);
+                text-align: center;
+            }
+            .fuel-country .flag {
+                font-size: 18px;
+                margin-bottom: 4px;
+            }
+            .fuel-country .name {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 10px;
+                color: var(--ink-faded);
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                margin-bottom: 4px;
+            }
+            .fuel-country .km {
+                font-family: "Fraunces", serif;
+                font-size: 15px;
+                color: var(--ink-soft);
+            }
+            .fuel-country .cost {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 16px;
+                color: var(--vine);
+                font-weight: 500;
+                margin-top: 6px;
+                padding-top: 6px;
+                border-top: 1px dashed var(--rule-soft);
+            }
+            .fuel-country .ppl {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 10px;
+                color: var(--ink-faded);
+            }
+            .fuel-total {
+                background: var(--ink);
+                color: var(--cream);
+                padding: 18px 24px;
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                font-family: "Fraunces", serif;
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+            .fuel-total-label {
+                font-size: 17px;
+                font-weight: 400;
+                font-style: italic;
+            }
+            .fuel-total-num {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 22px;
+                font-weight: 500;
+            }
+            .fuel-total-num small {
+                font-size: 12px;
+                color: rgba(247, 241, 227, 0.7);
+                margin-left: 8px;
+            }
+
+            /* VILLA CARDS */
+            .villa-grid {
+                display: grid;
+                gap: 16px;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                margin: 16px 0;
+            }
+            .villa-card {
+                border: 1px solid var(--rule);
+                background: var(--cream);
+                padding: 22px 24px;
+                position: relative;
+                transition:
+                    transform 0.2s ease,
+                    box-shadow 0.2s ease;
+            }
+            .villa-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 12px 28px -12px rgba(31, 38, 34, 0.22);
+            }
+            .villa-card.featured {
+                border: 2px solid var(--vine);
+                background: linear-gradient(
+                    180deg,
+                    var(--vine-bg) 0%,
+                    var(--cream) 60%
+                );
+            }
+            .villa-card.featured::before {
+                content: "★ TOP TIP";
+                position: absolute;
+                top: -10px;
+                left: 16px;
+                background: var(--vine);
+                color: var(--cream);
+                padding: 3px 10px;
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 9px;
+                letter-spacing: 0.18em;
+                font-weight: 600;
+            }
+            .villa-region {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 10px;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                color: var(--vine);
+                font-weight: 500;
+                margin-bottom: 6px;
+            }
+            .villa-name {
+                font-family: "Fraunces", serif;
+                font-weight: 500;
+                font-size: 22px;
+                line-height: 1.15;
+                letter-spacing: -0.01em;
+                margin: 0 0 4px;
+                color: var(--ink);
+            }
+            .villa-where {
+                font-family: "Fraunces", serif;
+                font-style: italic;
+                font-size: 14px;
+                color: var(--ink-faded);
+                margin-bottom: 10px;
+            }
+            .villa-features {
+                font-size: 13px;
+                color: var(--ink-soft);
+                line-height: 1.55;
+                margin-bottom: 12px;
+            }
+            .villa-features b {
+                color: var(--ink);
+                font-weight: 500;
+            }
+            .villa-meta {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 11px;
+                color: var(--ink-faded);
+                border-top: 1px dashed var(--rule);
+                padding-top: 10px;
+                margin-top: 10px;
+            }
+            .villa-meta .price {
+                color: var(--vine);
+                font-weight: 600;
+                font-size: 13px;
+            }
+            .villa-link {
+                display: inline-block;
+                margin-top: 8px;
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 10px;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                color: var(--ink);
+                border-bottom: 1px solid var(--vine);
+                text-decoration: none;
+                padding-bottom: 1px;
+            }
+            .villa-link:hover {
+                color: var(--vine);
+            }
+
+            /* DAYTRIPS */
+            .picks {
+                display: grid;
+                gap: 0;
+            }
+            .pick {
+                display: grid;
+                grid-template-columns: auto 1fr auto;
+                gap: 16px;
+                padding: 14px 0;
+                border-bottom: 1px dashed var(--rule-soft);
+                align-items: baseline;
+            }
+            .pick:last-child {
+                border-bottom: none;
+            }
+            .pick-tag {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 9px;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                padding: 3px 8px;
+                border-radius: 999px;
+                background: var(--cream);
+                color: var(--ink-soft);
+                border: 1px solid var(--rule);
+                white-space: nowrap;
+            }
+            .pick-tag.tag-sea {
+                background: #dce6ee;
+                color: var(--sea);
+                border-color: var(--sea);
+            }
+            .pick-tag.tag-culture {
+                background: #e8e0cc;
+                color: var(--olive);
+                border-color: var(--olive);
+            }
+            .pick-tag.tag-nature {
+                background: #d8ddd0;
+                color: var(--alpine);
+                border-color: var(--alpine);
+            }
+            .pick-tag.tag-food {
+                background: #f0e2c7;
+                color: var(--amber);
+                border-color: var(--amber);
+            }
+            .pick-tag.tag-kids {
+                background: #ece2dc;
+                color: var(--terracotta);
+                border-color: var(--terracotta);
+            }
+            .pick-tag.tag-wine {
+                background: var(--vine-bg);
+                color: var(--vine);
+                border-color: var(--vine);
+            }
+            .pick-name {
+                font-family: "Fraunces", serif;
+                font-size: 17px;
+                font-weight: 500;
+                color: var(--ink);
+                line-height: 1.25;
+            }
+            .pick-name span {
+                display: block;
+                font-family: "IBM Plex Sans", sans-serif;
+                font-style: normal;
+                font-size: 13px;
+                font-weight: 400;
+                color: var(--ink-soft);
+                margin-top: 3px;
+                line-height: 1.45;
+            }
+            .pick-meta {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 11px;
+                color: var(--ink-faded);
+                text-align: right;
+                white-space: nowrap;
+            }
+
+            /* BASE */
+            .base {
+                padding: 56px 0;
+                border-bottom: 3px solid var(--ink);
+                scroll-margin-top: 72px;
+            }
+            .base:last-of-type {
+                border-bottom: none;
+            }
+            .base-header {
+                display: grid;
+                grid-template-columns: 130px 1fr auto;
+                align-items: baseline;
+                gap: 32px;
+                margin-bottom: 24px;
+            }
+            .base-day {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 11px;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                color: var(--ink-faded);
+                font-weight: 500;
+            }
+            .base-day-num {
+                font-family: "Fraunces", serif;
+                font-style: italic;
+                font-weight: 400;
+                font-size: 52px;
+                line-height: 1;
+                color: var(--ink);
+                display: block;
+                margin-top: 4px;
+            }
+            .base-title {
+                font-family: "Fraunces", serif;
+                font-weight: 400;
+                font-size: 40px;
+                line-height: 1.05;
+                letter-spacing: -0.02em;
+                margin: 0;
+                color: var(--ink);
+            }
+            .base-region {
+                display: block;
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 11px;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                font-weight: 500;
+                margin-bottom: 8px;
+            }
+            .base-meta {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 11px;
+                letter-spacing: 0.05em;
+                color: var(--ink-soft);
+                text-align: right;
+                line-height: 1.7;
+                white-space: nowrap;
+            }
+            .base-nights {
+                color: var(--ink);
+                font-weight: 500;
+                font-size: 12px;
+            }
+            .base-content {
+                margin-left: 162px;
+            }
+            .base-lead {
+                font-family: "Fraunces", serif;
+                font-weight: 300;
+                font-size: 19px;
+                line-height: 1.55;
+                color: var(--ink-soft);
+                margin: 0 0 28px;
+                font-style: italic;
+            }
+
+            .subhead {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 11px;
+                letter-spacing: 0.22em;
+                text-transform: uppercase;
+                color: var(--ink-faded);
+                font-weight: 500;
+                margin: 32px 0 14px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid var(--rule);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .subhead:first-child {
+                margin-top: 0;
+            }
+
+            .base--vienna .base-day-num,
+            .base--vienna .base-region {
+                color: var(--amber);
+            }
+            .base--bled .base-day-num,
+            .base--bled .base-region {
+                color: var(--alpine);
+            }
+            .base--villa .base-day-num,
+            .base--villa .base-region {
+                color: var(--vine);
+            }
+            .base--lake .base-day-num,
+            .base--lake .base-region {
+                color: var(--olive);
+            }
+            .base--lednice .base-day-num,
+            .base--lednice .base-region {
+                color: var(--terracotta);
+            }
+
+            /* TRANSIT */
+            .transit {
+                background: linear-gradient(
+                    to right,
+                    var(--paper-warm),
+                    var(--cream)
+                );
+                border: 1px solid var(--rule);
+                border-left: 4px solid var(--ink-faded);
+                padding: 22px 28px;
+                margin: 32px 0;
+            }
+            .transit-label {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 10px;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                color: var(--ink-faded);
+                font-weight: 500;
+                margin-bottom: 8px;
+            }
+            .transit-title {
+                font-family: "Fraunces", serif;
+                font-weight: 500;
+                font-size: 20px;
+                color: var(--ink);
+                margin: 0 0 10px;
+            }
+            .transit-stops {
+                display: grid;
+                gap: 8px;
+                margin-top: 12px;
+            }
+            .transit-stop {
+                display: grid;
+                grid-template-columns: auto 1fr;
+                gap: 14px;
+                padding: 8px 0;
+                border-top: 1px dashed var(--rule-soft);
+                align-items: baseline;
+            }
+            .transit-stop:first-child {
+                border-top: 1px solid var(--rule);
+            }
+            .transit-when {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 10px;
+                color: var(--ink-faded);
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                font-weight: 500;
+                padding-top: 2px;
+                white-space: nowrap;
+            }
+            .transit-content {
+                color: var(--ink-soft);
+                font-size: 13.5px;
+                line-height: 1.55;
+            }
+            .transit-content b {
+                font-family: "Fraunces", serif;
+                font-weight: 500;
+                font-size: 16px;
+                color: var(--ink);
+                display: block;
+                margin-bottom: 3px;
+            }
+
+            /* CHARTS */
+            .chart-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 24px;
+                margin: 24px 0;
+            }
+            .chart-card {
+                background: var(--cream);
+                border: 1px solid var(--rule);
+                padding: 24px;
+            }
+            .chart-card h3 {
+                font-family: "Fraunces", serif;
+                font-weight: 500;
+                font-size: 18px;
+                margin: 0 0 6px;
+                color: var(--ink);
+            }
+            .chart-card .chart-sub {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 10px;
+                color: var(--ink-faded);
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                margin-bottom: 16px;
+            }
+            .chart-canvas-wrap {
+                position: relative;
+                height: 280px;
+            }
+            .chart-card.wide {
+                grid-column: 1 / -1;
+            }
+            .chart-card.wide .chart-canvas-wrap {
+                height: 320px;
+            }
+
+            /* BUDGET */
+            .budget-total {
+                background: var(--ink);
+                color: var(--cream);
+                padding: 32px;
+                margin-top: 24px;
+                display: grid;
+                grid-template-columns: 1fr auto;
+                gap: 24px;
+                align-items: center;
+            }
+            .budget-total-label {
+                font-family: "Fraunces", serif;
+                font-style: italic;
+                font-weight: 300;
+                font-size: 26px;
+                line-height: 1.1;
+            }
+            .budget-total-label small {
+                display: block;
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 11px;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                margin-top: 8px;
+                color: rgba(247, 241, 227, 0.7);
+                font-style: normal;
+            }
+            .budget-total-num {
+                font-family: "Fraunces", serif;
+                font-weight: 300;
+                font-size: 56px;
+                line-height: 0.9;
+                text-align: right;
+            }
+            .budget-total-num small {
+                display: block;
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 12px;
+                letter-spacing: 0.1em;
+                margin-top: 8px;
+                color: rgba(247, 241, 227, 0.7);
+            }
+
+            .checklist {
+                background: var(--paper-warm);
+                border: 1px solid var(--rule);
+                padding: 22px 28px;
+                margin: 16px 0;
+            }
+            .checklist h4 {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 11px;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                color: var(--ink-faded);
+                margin: 0 0 12px;
+                font-weight: 500;
+            }
+            .checklist ul {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+            .checklist li {
+                padding: 7px 0 7px 28px;
+                position: relative;
+                font-size: 14px;
+                color: var(--ink-soft);
+                line-height: 1.5;
+                border-bottom: 1px dashed var(--rule-soft);
+            }
+            .checklist li:last-child {
+                border-bottom: none;
+            }
+            .checklist li::before {
+                content: "□";
+                position: absolute;
+                left: 4px;
+                color: var(--vine);
+                font-weight: 600;
+                font-size: 18px;
+                line-height: 1;
+            }
+
+            .footer {
+                margin-top: 56px;
+                padding-top: 24px;
+                border-top: 1px solid var(--rule);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 10px;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                color: var(--ink-faded);
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+            .footer em {
+                font-family: "Fraunces", serif;
+                font-style: italic;
+                text-transform: none;
+                letter-spacing: 0;
+                font-size: 13px;
+                color: var(--ink-soft);
+            }
+
+            @media (max-width: 880px) {
+                .topnav-links {
+                    display: none;
+                }
+                .page {
+                    padding: 24px 18px 64px;
+                }
+                .base-header {
+                    grid-template-columns: 1fr;
+                    gap: 8px;
+                }
+                .base-day-num {
+                    font-size: 36px;
+                }
+                .base-title {
+                    font-size: 28px;
+                }
+                .base-meta {
+                    text-align: left;
+                    white-space: normal;
+                }
+                .base-content {
+                    margin-left: 0;
+                }
+                .docs-grid {
+                    grid-template-columns: 1fr;
+                }
+                .pick {
+                    grid-template-columns: 1fr;
+                    gap: 4px;
+                }
+                .pick-meta {
+                    text-align: left;
+                }
+                .pick-tag {
+                    width: fit-content;
+                }
+                .budget-total {
+                    grid-template-columns: 1fr;
+                    text-align: left;
+                }
+                .budget-total-num {
+                    text-align: left;
+                    font-size: 44px;
+                }
+                .hero-stats {
+                    gap: 28px;
+                }
+                .stat-num {
+                    font-size: 28px;
+                }
+                .hero-title {
+                    font-size: 52px;
+                }
+                .section-title {
+                    font-size: 28px;
+                }
+                #leaflet-map {
+                    height: 420px;
+                }
+                .chart-grid {
+                    grid-template-columns: 1fr;
+                }
+                .fuel-controls {
+                    grid-template-columns: 1fr;
+                }
+                .fuel-breakdown {
+                    grid-template-columns: 1fr 1fr;
+                }
+                .manifesto-row {
+                    grid-template-columns: 1fr 1fr;
+                }
+            }
+
+            @media print {
+                .topnav {
+                    display: none;
+                }
+                body {
+                    background: white;
+                }
+                .page {
+                    box-shadow: none;
+                    padding: 24px;
+                    max-width: none;
+                }
+                .base,
+                .villa-card,
+                .transit,
+                .budget-total,
+                .manifesto {
+                    page-break-inside: avoid;
+                }
+                .villa-card:hover {
+                    transform: none;
+                    box-shadow: none;
+                }
+                #leaflet-map {
+                    display: none;
+                }
+                .fuel-calc {
+                    background: white;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="topnav">
+            <div class="topnav-inner">
+                <span class="topnav-brand"
+                    >Slovinsko 2026 <em>· chill verze</em></span
+                >
+                <div class="topnav-links">
+                    <a href="#manifesto">Manifest</a>
+                    <a href="#mapa">Mapa</a>
+                    <a href="#vily">Vily</a>
+                    <a href="#palivo">Palivo</a>
+                    <a href="#viden">Vídeň</a>
+                    <a href="#bled">Bled</a>
+                    <a href="#vila">Brda ★</a>
+                    <a href="#podersdorf">Podersdorf</a>
+                    <a href="#lednice">Lednice</a>
+                    <a href="index.html" class="alt">↗ plný okruh</a>
+                </div>
+            </div>
+        </nav>
+
+        <main class="page">
+            <header class="masthead">
+                <span class="masthead-volume"
+                    >Cestovní deník № 5 · Verze chill 2026</span
+                >
+                <span>20.7. – 2.8. · Rodinný výlet · Passat 2.0 TDI Combi</span>
+            </header>
+
+            <section class="hero">
+                <div class="hero-eyebrow">
+                    Itinerář · 14 dní · 13 nocí · 1 hlavní cíl · červenec–srpen
+                    2026
+                </div>
+                <h1 class="hero-title">
+                    Vila <em>v Brdě</em><br />a klid kolem
+                </h1>
+                <p class="hero-sub">
+                    Místo okruhu jeden hlavní cíl: privátní vila s vlastním
+                    bazénem ve vinařské Goriški Brdě. Sedm nocí na jednom místě
+                    — bazén, gril, víno, hudba. Cestou tam a zpět krátké
+                    zastávky, žádný den nad 480 km.
+                </p>
+                <div class="hero-stats">
+                    <div>
+                        <div class="stat-num">14</div>
+                        <div class="stat-label">Dní</div>
+                    </div>
+                    <div>
+                        <div class="stat-num">13</div>
+                        <div class="stat-label">Nocí</div>
+                    </div>
+                    <div>
+                        <div class="stat-num">7</div>
+                        <div class="stat-label">Nocí ve vile</div>
+                    </div>
+                    <div>
+                        <div class="stat-num">5</div>
+                        <div class="stat-label">Základen</div>
+                    </div>
+                    <div>
+                        <div class="stat-num">~1 800</div>
+                        <div class="stat-label">Kilometrů</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MANIFESTO -->
+            <section class="section" id="manifesto">
+                <div class="section-eyebrow">Manifest této dovolené</div>
+                <h2 class="section-title">
+                    Méně přejíždění, <em>více plavání</em>
+                </h2>
+                <p class="section-intro">
+                    Cílem není stihnout co nejvíc. Cílem je sednout si k bazénu
+                    s vinnou sklenkou a poslouchat hudbu, dokud je den. Výlety
+                    jsou volitelné, ne povinné.
+                </p>
+                <div class="manifesto">
+                    <div class="manifesto-row">
+                        <div class="manifesto-item">
+                            <div class="icon">~</div>
+                            <div class="label">Bazén</div>
+                            <div class="desc">
+                                Privátní, ne sdílený. Otevřený od ráno do tmy.
+                                Děti v něm trénují potápění.
+                            </div>
+                        </div>
+                        <div class="manifesto-item">
+                            <div class="icon">♨</div>
+                            <div class="label">Gril</div>
+                            <div class="desc">
+                                Ráno na trh pro rajčata a istrijského pršuta.
+                                Večer rozpálíme a zapojíme bluetooth.
+                            </div>
+                        </div>
+                        <div class="manifesto-item">
+                            <div class="icon">𓋹</div>
+                            <div class="label">Víno</div>
+                            <div class="desc">
+                                Brda je domovem rebuly, malvazije a teranu.
+                                Sklepy jsou pěšky nebo 5 minut autem.
+                            </div>
+                        </div>
+                        <div class="manifesto-item">
+                            <div class="icon">♪</div>
+                            <div class="label">Hudba</div>
+                            <div class="desc">
+                                Reproduktor na terasu, playlist připraven.
+                                Cikády po setmění to dohrají.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MAP -->
+            <section class="section" id="mapa">
+                <div class="section-eyebrow">Mapa cesty</div>
+                <h2 class="section-title">
+                    Klín na <em>jih</em>, sedm dní stop, klín nahoru
+                </h2>
+                <p class="section-intro">
+                    Jedna obslužná smyčka jako dřív, ale dvouměsíční zastávka
+                    uprostřed. Modré markery jsou základny, červené přejezdové
+                    zastávky, vínové kandidáti vily, modrozelené volitelné
+                    výlety od bazénu.
+                </p>
+                <div class="map-frame">
+                    <div id="leaflet-map"></div>
+                    <div class="map-legend">
+                        <span class="map-legend-item"
+                            ><span
+                                class="map-legend-dot"
+                                style="background: #2a6276"
+                            ></span
+                            >Základna</span
+                        >
+                        <span class="map-legend-item"
+                            ><span
+                                class="map-legend-dot"
+                                style="background: #a14f2c"
+                            ></span
+                            >Zastávka po cestě</span
+                        >
+                        <span class="map-legend-item"
+                            ><span
+                                class="map-legend-dot"
+                                style="background: #6e2b4e"
+                            ></span
+                            >Kandidát vily</span
+                        >
+                        <span class="map-legend-item"
+                            ><span
+                                class="map-legend-dot"
+                                style="background: #5c6b2e"
+                            ></span
+                            >Daytrip z vily</span
+                        >
+                        <span class="map-legend-item"
+                            ><span
+                                class="map-legend-dot"
+                                style="background: #1f2622"
+                            ></span
+                            >Start / cíl</span
+                        >
+                    </div>
+                    <div class="map-note">
+                        CARTO Voyager · zoom kolečkem · klik na marker pro
+                        detail
+                    </div>
+                </div>
+            </section>
+
+            <!-- DISTANCES + VIGNETTES -->
+            <section class="section" id="trasa">
+                <div class="section-eyebrow">Přejezdy &amp; vinjety</div>
+                <h2 class="section-title">
+                    Šest <em>dní v autě</em>, ale klidných
+                </h2>
+                <p class="section-intro">
+                    Každý přejezd pod 5 hodin. Nejdelší — vila zpátky do
+                    Burgenlandu — je v půli rozseknutý zastávkou v Klagenfurtu.
+                    Mezitím týden, kdy auto stojí.
+                </p>
+                <table class="distance-table">
+                    <thead>
+                        <tr>
+                            <th>Úsek</th>
+                            <th class="num">Vzdálenost</th>
+                            <th class="num">Čas</th>
+                            <th>Mezizastávka</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                Ostrava → Vídeň<span class="note"
+                                    >Den 1 · po 20.7.</span
+                                >
+                            </td>
+                            <td class="num">290 km</td>
+                            <td class="num">3 h</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Vídeň → Bled<span class="note"
+                                    >Den 2 · út 21.7.</span
+                                >
+                            </td>
+                            <td class="num">390 km</td>
+                            <td class="num">4 h</td>
+                            <td>káva v Grazu</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Bled → vila Brda<span class="note"
+                                    >Den 4 · čt 23.7.</span
+                                >
+                            </td>
+                            <td class="num">200 km</td>
+                            <td class="num">3 h</td>
+                            <td>Postojna jáma + Predjamský hrad</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Vila → Podersdorf<span class="note"
+                                    >Den 11 · čt 30.7.</span
+                                >
+                            </td>
+                            <td class="num">480 km</td>
+                            <td class="num">5 h</td>
+                            <td>Klagenfurt — Minimundus</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Podersdorf → Lednice<span class="note"
+                                    >Den 13 · so 1.8.</span
+                                >
+                            </td>
+                            <td class="num">200 km</td>
+                            <td class="num">2 h</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Lednice → Ostrava<span class="note"
+                                    >Den 14 · ne 2.8.</span
+                                >
+                            </td>
+                            <td class="num">150 km</td>
+                            <td class="num">2 h</td>
+                            <td>—</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>Celkem (bez výletů)</td>
+                            <td class="num">~1 710 km</td>
+                            <td class="num">~19 h</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <div class="docs">
+                    <div class="docs-title">
+                        Dálniční známky &amp; mýta — odhad pro 2026
+                    </div>
+                    <div class="docs-grid">
+                        <div>
+                            <div class="doc-flag">🇨🇿 Česko</div>
+                            <div class="doc-name">10denní e-známka</div>
+                            <div class="doc-price">12 € · ~290 Kč</div>
+                            <div class="doc-note">
+                                Pro tam i zpět. edalnice.cz, platná ihned.
+                            </div>
+                        </div>
+                        <div>
+                            <div class="doc-flag">🇦🇹 Rakousko</div>
+                            <div class="doc-name">2měsíční vinjeta</div>
+                            <div class="doc-price">29 €</div>
+                            <div class="doc-note">
+                                14 dní v AT — 2 měsíce vychází nejlevněji než
+                                dvě 10denní.
+                            </div>
+                        </div>
+                        <div>
+                            <div class="doc-flag">🇸🇮 Slovinsko</div>
+                            <div class="doc-name">Měsíční e-vinjeta</div>
+                            <div class="doc-price">32 €</div>
+                            <div class="doc-note">
+                                Pro 9 dní v SI je měsíční bezpečnější než 7denní
+                                × 2 (16+16 = 32 € to samé).
+                            </div>
+                        </div>
+                        <div>
+                            <div class="doc-flag">🇮🇹 Itálie</div>
+                            <div class="doc-name">Mýtné podle výletů</div>
+                            <div class="doc-price">~10–20 €</div>
+                            <div class="doc-note">
+                                Bez vinjety, jen na bránách. Pokud daytrip do
+                                Aquileie/Trsta.
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        style="
+                            margin-top: 16px;
+                            padding-top: 14px;
+                            border-top: 1px dashed var(--rule);
+                            font-size: 12.5px;
+                            color: var(--ink-soft);
+                            line-height: 1.55;
+                        "
+                    >
+                        <b>Celkem ~85 € na vinjety + mýta.</b> Parkovné v Bledu,
+                        Vídni a po výletech navíc ~30 €.
+                    </div>
+                </div>
+            </section>
+
+            <!-- VILLAS -->
+            <section class="section" id="vily">
+                <div class="section-eyebrow">Kandidáti na vilu</div>
+                <h2 class="section-title">
+                    Sedm nocí <em>na jednom místě</em>
+                </h2>
+                <p class="section-intro">
+                    Vybrané privátní vily s vlastním bazénem (ne sdíleným) v
+                    Goriški Brdě, Vipavském údolí, na Krasu a ve Slovinské
+                    Istrii. Ceny indikativní pro vrchol sezóny — k ověření před
+                    rezervací. Začni shora.
+                </p>
+
+                <h3 class="subhead">
+                    ★ Top tip — Goriška Brda
+                    <span
+                        style="
+                            text-transform: none;
+                            letter-spacing: 0;
+                            font-style: italic;
+                            color: var(--vine);
+                        "
+                        >vinařské srdce Slovinska</span
+                    >
+                </h3>
+                <div class="villa-grid">
+                    <div class="villa-card featured">
+                        <div class="villa-region">Brda · Kozana</div>
+                        <div class="villa-name">
+                            Villa EVA Resort &amp; Boutique
+                        </div>
+                        <div class="villa-where">
+                            Dobrovo / Kozana, 45 min od moře
+                        </div>
+                        <div class="villa-features">
+                            <b>3 ložnice</b>, 3 koupelny, bazén s výhledem,
+                            <b>sauna</b>, vířivka, sluneční terasa, zahrada. V
+                            centru autentické vesnice ale úplně oddělená —
+                            panorama vinic Brdy.
+                        </div>
+                        <div class="villa-meta">
+                            <span>Soukromý bazén · sauna · AC</span
+                            ><span class="price">~400 €/noc</span>
+                        </div>
+                        <a
+                            class="villa-link"
+                            href="https://villa-eva.si/"
+                            target="_blank"
+                            rel="noopener"
+                            >villa-eva.si ↗</a
+                        >
+                    </div>
+                    <div class="villa-card">
+                        <div class="villa-region">Brda · Vipolže</div>
+                        <div class="villa-name">Alma Vista</div>
+                        <div class="villa-where">Vipolže, krajina Brda</div>
+                        <div class="villa-features">
+                            Slovenia Green certifikace, design+umění, bazén,
+                            klid. Architekturně silná, méně klasická než Eva.
+                        </div>
+                        <div class="villa-meta">
+                            <span>Bazén · Slovenia Green</span
+                            ><span class="price">~250–350 €/noc</span>
+                        </div>
+                        <a
+                            class="villa-link"
+                            href="https://www.almavista.si/"
+                            target="_blank"
+                            rel="noopener"
+                            >almavista.si ↗</a
+                        >
+                    </div>
+                    <div class="villa-card">
+                        <div class="villa-region">Brda · Kojsko</div>
+                        <div class="villa-name">Villa Zerou</div>
+                        <div class="villa-where">Kojsko, panorama vinic</div>
+                        <div class="villa-features">
+                            Moderní luxus, velký bazén, panoramatický výhled na
+                            vinice Brdy. Designově čistá moderní stavba.
+                        </div>
+                        <div class="villa-meta">
+                            <span>Velký bazén · moderní</span
+                            ><span class="price">~300–400 €/noc</span>
+                        </div>
+                        <a
+                            class="villa-link"
+                            href="https://zerou.si/"
+                            target="_blank"
+                            rel="noopener"
+                            >zerou.si ↗</a
+                        >
+                    </div>
+                    <div class="villa-card">
+                        <div class="villa-region">Brda · Brda</div>
+                        <div class="villa-name">Fana Estate</div>
+                        <div class="villa-where">Brda, vinařský statek</div>
+                        <div class="villa-features">
+                            <b>Vlastní vinný sklep</b> a estate vína,
+                            panoramatické vinice, bazén. Celé je to v rámci
+                            vinařství — tj. víno teče z domu.
+                        </div>
+                        <div class="villa-meta">
+                            <span>Bazén · vinný sklep</span
+                            ><span class="price">~250–350 €/noc</span>
+                        </div>
+                        <a
+                            class="villa-link"
+                            href="https://fanaestate.si/"
+                            target="_blank"
+                            rel="noopener"
+                            >fanaestate.si ↗</a
+                        >
+                    </div>
+                    <div class="villa-card">
+                        <div class="villa-region">Brda · Medana</div>
+                        <div class="villa-name">Belica Homestead</div>
+                        <div class="villa-where">Medana, tradiční usedlost</div>
+                        <div class="villa-features">
+                            Tradiční brdská usedlost s bazénem a domácí kuchyní.
+                            Levnější vstup, autentické. Na seznamu
+                            Slovenia.info.
+                        </div>
+                        <div class="villa-meta">
+                            <span>Bazén · usedlost</span
+                            ><span class="price">~150–250 €/noc</span>
+                        </div>
+                        <a
+                            class="villa-link"
+                            href="https://belica.si/"
+                            target="_blank"
+                            rel="noopener"
+                            >belica.si ↗</a
+                        >
+                    </div>
+                </div>
+
+                <h3 class="subhead">
+                    Vipava + Kras
+                    <span
+                        style="
+                            text-transform: none;
+                            letter-spacing: 0;
+                            font-style: italic;
+                            color: var(--ink-faded);
+                        "
+                        >10–30 min od Brdy</span
+                    >
+                </h3>
+                <div class="villa-grid">
+                    <div class="villa-card featured">
+                        <div class="villa-region">Vipava · Branik</div>
+                        <div class="villa-name">Vila Mravljevi</div>
+                        <div class="villa-where">
+                            Branik (Vipava), kámen + dřevo + hlína
+                        </div>
+                        <div class="villa-features">
+                            <b>4 ložnice</b>, 2 kuchyně, bazén, <b>sauna</b>,
+                            ceramic grill, 2 AC, vinný sklep, 2 terasy. Největší
+                            a nejvybavenější ze seznamu — ideální když chceš
+                            rezervu místa.
+                        </div>
+                        <div class="villa-meta">
+                            <span>4 ložnice · sauna · AC</span
+                            ><span class="price">~250–350 €/noc</span>
+                        </div>
+                        <a
+                            class="villa-link"
+                            href="https://vila-mravljevi.si/"
+                            target="_blank"
+                            rel="noopener"
+                            >vila-mravljevi.si ↗</a
+                        >
+                    </div>
+                    <div class="villa-card">
+                        <div class="villa-region">Kras · Kobdilj</div>
+                        <div class="villa-name">Villa Fabiani</div>
+                        <div class="villa-where">
+                            Kobdilj, renovovaný panský dům
+                        </div>
+                        <div class="villa-features">
+                            Renovované karstové sídlo s bazénem. Tradiční
+                            terakota, kamenné stěny, stinné nádvoří.
+                        </div>
+                        <div class="villa-meta">
+                            <span>Bazén · panský dům</span
+                            ><span class="price">~250–350 €/noc</span>
+                        </div>
+                        <a
+                            class="villa-link"
+                            href="https://villafabiani.com/"
+                            target="_blank"
+                            rel="noopener"
+                            >villafabiani.com ↗</a
+                        >
+                    </div>
+                    <div class="villa-card">
+                        <div class="villa-region">Kras</div>
+                        <div class="villa-name">Hiša Brinovka</div>
+                        <div class="villa-where">Karstová usedlost</div>
+                        <div class="villa-features">
+                            Typická karstová homestead s benátskými prvky,
+                            zahrada, bazén, sauna. Klid uprostřed kamenné
+                            krajiny.
+                        </div>
+                        <div class="villa-meta">
+                            <span>Bazén · sauna</span
+                            ><span class="price">~200–300 €/noc</span>
+                        </div>
+                        <a
+                            class="villa-link"
+                            href="https://www.brinovka.com/"
+                            target="_blank"
+                            rel="noopener"
+                            >brinovka.com ↗</a
+                        >
+                    </div>
+                    <div class="villa-card">
+                        <div class="villa-region">Vipava</div>
+                        <div class="villa-name">Saksida Wine Farm</div>
+                        <div class="villa-where">Vipavské údolí, vinařství</div>
+                        <div class="villa-features">
+                            Vinařství s bazénovými bungalovy. Levnější varianta,
+                            dělají vlastní víno přímo v Vipavě.
+                        </div>
+                        <div class="villa-meta">
+                            <span>Bungalovy · bazén</span
+                            ><span class="price">~150–200 €/noc</span>
+                        </div>
+                        <a
+                            class="villa-link"
+                            href="https://saxida.com/"
+                            target="_blank"
+                            rel="noopener"
+                            >saxida.com ↗</a
+                        >
+                    </div>
+                </div>
+
+                <h3 class="subhead">
+                    Slovinská Istrie
+                    <span
+                        style="
+                            text-transform: none;
+                            letter-spacing: 0;
+                            font-style: italic;
+                            color: var(--ink-faded);
+                        "
+                        >15 min od pobřeží — pokud má být moře blíž</span
+                    >
+                </h3>
+                <div class="villa-grid">
+                    <div class="villa-card">
+                        <div class="villa-region">Istrie · Fijeroga</div>
+                        <div class="villa-name">Villa Lavanda</div>
+                        <div class="villa-where">
+                            Fijeroga, kámen + vinice + olivy
+                        </div>
+                        <div class="villa-features">
+                            Tradiční istrijský kamenný dům s bazénem a výhledem
+                            na vinice a olivový háj. Moře 20 min.
+                        </div>
+                        <div class="villa-meta">
+                            <span>Kámen · bazén</span
+                            ><span class="price">~200–300 €/noc</span>
+                        </div>
+                        <a
+                            class="villa-link"
+                            href="https://www.igs.si/"
+                            target="_blank"
+                            rel="noopener"
+                            >igs.si ↗</a
+                        >
+                    </div>
+                    <div class="villa-card">
+                        <div class="villa-region">Istrie · Marezige</div>
+                        <div class="villa-name">Casa Oasa</div>
+                        <div class="villa-where">
+                            Marezige, vinařská vesnice
+                        </div>
+                        <div class="villa-features">
+                            Bazén + whirlpool, vinařská vesnice, dobrá pozice
+                            pro cyklo a turistiku. Moře 15 min.
+                        </div>
+                        <div class="villa-meta">
+                            <span>Bazén · whirlpool</span
+                            ><span class="price">~200–300 €/noc</span>
+                        </div>
+                        <a
+                            class="villa-link"
+                            href="https://www.casaoasa.com/"
+                            target="_blank"
+                            rel="noopener"
+                            >casaoasa.com ↗</a
+                        >
+                    </div>
+                    <div class="villa-card">
+                        <div class="villa-region">Istrie</div>
+                        <div class="villa-name">Villa Carolina</div>
+                        <div class="villa-where">Slovinská Istrie</div>
+                        <div class="villa-features">
+                            <b>Vyhřívaný bazén</b>, kombinace tradičního a
+                            moderního, celoročně. Od pobřeží blízko.
+                        </div>
+                        <div class="villa-meta">
+                            <span>Vyhřívaný bazén</span
+                            ><span class="price">~250–350 €/noc</span>
+                        </div>
+                        <a
+                            class="villa-link"
+                            href="https://villacarolina.net/"
+                            target="_blank"
+                            rel="noopener"
+                            >villacarolina.net ↗</a
+                        >
+                    </div>
+                </div>
+
+                <p
+                    style="
+                        margin-top: 24px;
+                        font-size: 13px;
+                        color: var(--ink-faded);
+                        line-height: 1.6;
+                        font-style: italic;
+                    "
+                >
+                    <b>Záložní region — chorvatská vnitrozemní Istrie</b>
+                    (Motovun · Grožnjan · Buje): víc nabídek, levnější, ale
+                    ~1000 km z Ostravy a v sezóně rušnější. Top tipy:
+                    <a
+                        href="https://www.booking.com/hotel/hr/istrian-villa-w-infinity-pool-under-motovun-city.html"
+                        target="_blank"
+                        rel="noopener"
+                        >Villa Toro</a
+                    >
+                    (infinity bazén pod Motovunem, ~450 €/noc), kamenné domky
+                    kolem Grožnjanu na
+                    <a
+                        href="https://www.airbnb.com/groznjan-croatia/stays/villas"
+                        target="_blank"
+                        rel="noopener"
+                        >Airbnb</a
+                    >. <br /><br />
+                    <b>Kurátorský seznam:</b>
+                    <a
+                        href="https://www.slovenia.info/en/stories/the-most-beautiful-boutique-villas-and-homesteads-with-a-pool"
+                        target="_blank"
+                        rel="noopener"
+                        >slovenia.info — nejhezčí vily a usedlosti s bazénem</a
+                    >.
+                </p>
+            </section>
+
+            <!-- FUEL -->
+            <section class="section" id="palivo">
+                <div class="section-eyebrow">Spotřeba paliva</div>
+                <h2 class="section-title">
+                    Co spotřebuje <em>Passat 2.0 TDI</em>
+                </h2>
+                <p class="section-intro">
+                    Reálně ~6,5 l/100 km s rodinou a kufry na dálnici. Posuvníky
+                    přepočítají odhad podle aktuálních cen nafty (květen 2026:
+                    SI €1,62 · CZ €1,97 · IT ~€2,05 · AT €2,20). Trasa má víc
+                    Slovinska a méně Itálie než plný okruh.
+                </p>
+                <div class="fuel-calc">
+                    <div class="fuel-header">
+                        <div>
+                            <h3 class="fuel-title">
+                                Kalkulačka <em>nafty</em>
+                            </h3>
+                            <div class="fuel-sub">
+                                VW Passat B7 Combi · 2.0 TDI · diesel · 70 l
+                                tank
+                            </div>
+                        </div>
+                        <div class="fuel-sub" id="fuel-summary">
+                            ~117 l · ~233 €
+                        </div>
+                    </div>
+                    <div class="fuel-controls">
+                        <div class="fuel-input">
+                            <label>Reálná spotřeba</label>
+                            <div class="value">
+                                <span id="cons-val">6.5</span
+                                ><small>l/100 km</small>
+                            </div>
+                            <input
+                                id="cons"
+                                type="range"
+                                min="4.6"
+                                max="9"
+                                step="0.1"
+                                value="6.5"
+                            />
+                        </div>
+                        <div class="fuel-input">
+                            <label>Celková trasa</label>
+                            <div class="value">
+                                <span id="km-val">1800</span><small>km</small>
+                            </div>
+                            <input
+                                id="km"
+                                type="range"
+                                min="1500"
+                                max="2400"
+                                step="10"
+                                value="1800"
+                            />
+                        </div>
+                        <div class="fuel-input">
+                            <label>Přirážka EUR/litr</label>
+                            <div class="value">
+                                +<span id="surch-val">0.00</span
+                                ><small>€/l</small>
+                            </div>
+                            <input
+                                id="surch"
+                                type="range"
+                                min="0"
+                                max="0.30"
+                                step="0.01"
+                                value="0"
+                            />
+                        </div>
+                    </div>
+                    <div class="fuel-breakdown" id="fuel-breakdown"></div>
+                    <div class="fuel-total">
+                        <div class="fuel-total-label">
+                            Odhad nafty pro celou trasu
+                        </div>
+                        <div class="fuel-total-num" id="fuel-total">
+                            ~233 €<small>~5 690 Kč</small>
+                        </div>
+                    </div>
+                </div>
+                <p
+                    style="
+                        margin-top: 18px;
+                        font-size: 13px;
+                        color: var(--ink-faded);
+                        line-height: 1.6;
+                        font-style: italic;
+                    "
+                >
+                    <b>Tip:</b> Tankuj v Slovinsku — je to jednoznačně
+                    nejlevnější. Před výjezdem z vily plný tank: dojedeš s ním
+                    přes Klagenfurt do Podersdorfu i bez tankování v Rakousku.
+                </p>
+            </section>
+
+            <!-- ============ ZÁKLADNA 1: VÍDEŇ ============ -->
+            <section class="base base--vienna" id="viden">
+                <div class="base-header">
+                    <div>
+                        <div class="base-day">Den 1 · po 20.7.</div>
+                        <div class="base-day-num">01</div>
+                    </div>
+                    <div>
+                        <span class="base-region" style="color: var(--amber)"
+                            >Rakousko · Vídeň</span
+                        >
+                        <h2 class="base-title">
+                            Měkké <em>spuštění</em> u Schönbrunnu
+                        </h2>
+                    </div>
+                    <div class="base-meta">
+                        <div class="base-nights">1 noc</div>
+                        <div>290 km · 3 h</div>
+                        <div>—</div>
+                    </div>
+                </div>
+                <div class="base-content">
+                    <p class="base-lead">
+                        Krátký první den — přijet do Vídně na pozdní oběd, hodit
+                        věci do hotelu poblíž Schönbrunnu a vyrazit do zahrad
+                        nebo ZOO. Žádný stres, ráno vyrazit dál.
+                    </p>
+                    <div class="picks">
+                        <div class="pick">
+                            <span class="pick-tag tag-kids">Děti</span>
+                            <div class="pick-name">
+                                ZOO Schönbrunn<span
+                                    >Nejstarší ZOO na světě, panda, slon,
+                                    polární liška. Vstup pro 2+2 (4, 6 let):
+                                    zdarma za děti pod 6, plný za 6letého — ~50
+                                    € rodina.</span
+                                >
+                            </div>
+                            <div class="pick-meta">2–3 h · 29 €/dosp.</div>
+                        </div>
+                        <div class="pick">
+                            <span class="pick-tag tag-culture">Zdarma</span>
+                            <div class="pick-name">
+                                Zámecké zahrady, Gloriette, bludiště<span
+                                    >Bezplatný vstup do zahrad, jen Gloriette a
+                                    bludiště placené. Skvělé na pozdní
+                                    odpoledne.</span
+                                >
+                            </div>
+                            <div class="pick-meta">1–2 h · 0 €</div>
+                        </div>
+                        <div class="pick">
+                            <span class="pick-tag tag-food">Večeře</span>
+                            <div class="pick-name">
+                                Schnitzel u Plachutty nebo nějaký Heuriger v
+                                Grinzingu<span
+                                    >Pokud máte energii. Plachutta Wollzeile =
+                                    klasika, Heuriger = sklenkové domácí
+                                    víno.</span
+                                >
+                            </div>
+                            <div class="pick-meta">vlastní výběr</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="transit">
+                <div class="transit-label">Přejezd · den 2 · út 21.7.</div>
+                <h3 class="transit-title">Vídeň → Bled · 390 km · 4 h</h3>
+                <div class="transit-stops">
+                    <div class="transit-stop">
+                        <div class="transit-when">poledne</div>
+                        <div class="transit-content">
+                            <b>Štýrský Hradec (Graz)</b>UNESCO staré město,
+                            výstup nebo lanovka na Schloßberg, oběd na náměstí.
+                            Pohodová pauza v půli.
+                        </div>
+                    </div>
+                    <div class="transit-stop">
+                        <div class="transit-when">večer</div>
+                        <div class="transit-content">
+                            <b>Příjezd Bled</b>Včetně checkin do penzionu /
+                            apartmánu. Krátká procházka kolem jezera za
+                            soumraku.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============ ZÁKLADNA 2: BLED ============ -->
+            <section class="base base--bled" id="bled">
+                <div class="base-header">
+                    <div>
+                        <div class="base-day">Den 2–3 · út–st 21–22.7.</div>
+                        <div class="base-day-num">02</div>
+                    </div>
+                    <div>
+                        <span class="base-region" style="color: var(--alpine)"
+                            >Slovinsko · Triglav</span
+                        >
+                        <h2 class="base-title">
+                            Bled, ale jen <em>krátce</em>
+                        </h2>
+                    </div>
+                    <div class="base-meta">
+                        <div class="base-nights">2 noci</div>
+                        <div>—</div>
+                        <div>—</div>
+                    </div>
+                </div>
+                <div class="base-content">
+                    <p class="base-lead">
+                        Klasická chuť Triglavu, ale bez ambicí. Jeden den jezero
+                        a hrad, druhý den buď Vintgar nebo Bohinj, pak hurá k
+                        bazénu.
+                    </p>
+                    <div class="picks">
+                        <div class="pick">
+                            <span class="pick-tag tag-nature">Klasika</span>
+                            <div class="pick-name">
+                                Jezero Bled — okruh + pletna na ostrov<span
+                                    >6 km kolem jezera, kostelík na ostrově
+                                    (pletna ~18 €/dosp., ~9 €/dítě), 99
+                                    schodů.</span
+                                >
+                            </div>
+                            <div class="pick-meta">3 h · ~80 € rodina</div>
+                        </div>
+                        <div class="pick">
+                            <span class="pick-tag tag-culture">Výhled</span>
+                            <div class="pick-name">
+                                Bledský hrad<span
+                                    >Nejstarší hrad ve Slovinsku, nejlepší
+                                    výhled na jezero. ~19 €/dosp., 7
+                                    €/dítě.</span
+                                >
+                            </div>
+                            <div class="pick-meta">1,5 h · ~50 € rodina</div>
+                        </div>
+                        <div class="pick">
+                            <span class="pick-tag tag-nature">Příroda</span>
+                            <div class="pick-name">
+                                Soutěska Vintgar (1,6 km dřevěné chodníky)<span
+                                    >Rezervace časového slotu online povinná.
+                                    ~15 €/dosp., 5 €/dítě.</span
+                                >
+                            </div>
+                            <div class="pick-meta">1,5 h · ~40 €</div>
+                        </div>
+                        <div class="pick">
+                            <span class="pick-tag tag-nature">Alternativa</span>
+                            <div class="pick-name">
+                                Jezero Bohinj + lanovka Vogel<span
+                                    >Klidnější než Bled. Lanovka do 1535 m s
+                                    výhledem na Triglav.</span
+                                >
+                            </div>
+                            <div class="pick-meta">půl den · ~99 € rodina</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="transit">
+                <div class="transit-label">Přejezd · den 4 · čt 23.7.</div>
+                <h3 class="transit-title">
+                    Bled → vila Brda · 200 km · 3 h (s prohlídkou ~5 h)
+                </h3>
+                <div class="transit-stops">
+                    <div class="transit-stop">
+                        <div class="transit-when">dopol.</div>
+                        <div class="transit-content">
+                            <b>Postojnská jáma</b>Krasová jeskyně s důlním
+                            vláčkem, jedna z největších v Evropě. Combo lístek
+                            2+2 ~131 €, časový slot online.
+                        </div>
+                    </div>
+                    <div class="transit-stop">
+                        <div class="transit-when">odpol.</div>
+                        <div class="transit-content">
+                            <b>Predjamský hrad</b>9 km od Postojny, hrad vsazený
+                            do skály. V combu s jeskyní.
+                        </div>
+                    </div>
+                    <div class="transit-stop">
+                        <div class="transit-when">večer</div>
+                        <div class="transit-content">
+                            <b>Příjezd k vile</b>Checkin, obhlídka bazénu, první
+                            gril. Suit case do skříně, plavky na sebe.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============ ZÁKLADNA 3: VILA BRDA ============ -->
+            <section class="base base--villa" id="vila">
+                <div class="base-header">
+                    <div>
+                        <div class="base-day">
+                            Den 4–10 · čt 23.7. – st 29.7.
+                        </div>
+                        <div class="base-day-num">03</div>
+                    </div>
+                    <div>
+                        <span class="base-region" style="color: var(--vine)"
+                            >★ Slovinsko · Goriška Brda</span
+                        >
+                        <h2 class="base-title">
+                            Vila <em>v Brdě</em> · srdce dovolené
+                        </h2>
+                    </div>
+                    <div class="base-meta">
+                        <div class="base-nights">7 nocí</div>
+                        <div>0 km</div>
+                        <div>—</div>
+                    </div>
+                </div>
+                <div class="base-content">
+                    <p class="base-lead">
+                        Tady se nic neplánuje. Vstávat, kdy chcete. Snídaně
+                        dlouhá. Bazén dopoledne, zahrada odpoledne, gril večer.
+                        Děti dvě hodiny v bazéně, pak víno na terase. Výlety jen
+                        jak budete mít chuť — max 2–3 za týden.
+                    </p>
+
+                    <h3 class="subhead">Pravidelný den ve vile</h3>
+                    <div class="picks">
+                        <div class="pick">
+                            <span class="pick-tag tag-food">Ráno</span>
+                            <div class="pick-name">
+                                Farmářský trh + pekárna<span
+                                    >Dobrovo má sobotní trh, jinak vesnice mají
+                                    denní pekárny. Rajčata, bílý chleba, šunka,
+                                    sýr.</span
+                                >
+                            </div>
+                            <div class="pick-meta">30 min</div>
+                        </div>
+                        <div class="pick">
+                            <span class="pick-tag tag-kids">Bazén</span>
+                            <div class="pick-name">
+                                Plavání, potápění, šipka<span
+                                    >Děti vydrží 2–3 h dopoledne i odpoledne.
+                                    Sluníčko + plavky + kelímek vody.</span
+                                >
+                            </div>
+                            <div class="pick-meta">~4 h denně</div>
+                        </div>
+                        <div class="pick">
+                            <span class="pick-tag tag-wine">Polední</span>
+                            <div class="pick-name">
+                                Sklenka rebuly v stínu<span
+                                    >Místní rebula z vinařství 5 minut autem.
+                                    Občas náročná oběd-degustace někde
+                                    poblíž.</span
+                                >
+                            </div>
+                            <div class="pick-meta">15 min cesta</div>
+                        </div>
+                        <div class="pick">
+                            <span class="pick-tag tag-food">Večer</span>
+                            <div class="pick-name">
+                                Gril, hudba, pomalu setmění<span
+                                    >Steaky, čevapčiči, grilovaná zelenina,
+                                    místní pršut. Reproduktor na terasu, svíčky,
+                                    cikády.</span
+                                >
+                            </div>
+                            <div class="pick-meta">3 h</div>
+                        </div>
+                    </div>
+
+                    <h3 class="subhead">
+                        Volitelné výlety od bazénu
+                        <span
+                            style="
+                                text-transform: none;
+                                letter-spacing: 0;
+                                font-style: italic;
+                                font-size: 13px;
+                                color: var(--ink-faded);
+                            "
+                            >max 2–3 za týden, vše do 1,5 h</span
+                        >
+                    </h3>
+                    <div class="picks">
+                        <div class="pick">
+                            <span class="pick-tag tag-sea">Moře</span>
+                            <div class="pick-name">
+                                Trieste + zámek Miramare<span
+                                    >Habsburský přístav nad mořem, zámek
+                                    Maximiliána, kavárny Illy. Klidný den u moře
+                                    bez chaosu pláže.</span
+                                >
+                            </div>
+                            <div class="pick-meta">45 min · půl den</div>
+                        </div>
+                        <div class="pick">
+                            <span class="pick-tag tag-culture">UNESCO</span>
+                            <div class="pick-name">
+                                Aquileia + Grado<span
+                                    >Aquileia má největší starokřesťanskou
+                                    mozaiku v Evropě. Grado má písečnou pláž s
+                                    mělkým vstupem (ideální pro děti 4 a
+                                    6).</span
+                                >
+                            </div>
+                            <div class="pick-meta">50 min · celý den</div>
+                        </div>
+                        <div class="pick">
+                            <span class="pick-tag tag-sea">Kombo</span>
+                            <div class="pick-name">
+                                Piran + Portorož<span
+                                    >Slovinská benátská perla, věž San Giorgio,
+                                    hradby. Portorož na koupání. Hodina jízdy z
+                                    vily.</span
+                                >
+                            </div>
+                            <div class="pick-meta">1 h · celý den</div>
+                        </div>
+                        <div class="pick">
+                            <span class="pick-tag tag-culture">Hidden gem</span>
+                            <div class="pick-name">
+                                Cividale del Friuli<span
+                                    >UNESCO langobardské městečko, Hudičev most
+                                    přes řeku Natisone. Klidnější než Aquileia,
+                                    méně turistů.</span
+                                >
+                            </div>
+                            <div class="pick-meta">40 min · půl den</div>
+                        </div>
+                        <div class="pick">
+                            <span class="pick-tag tag-nature">Voda</span>
+                            <div class="pick-name">
+                                Soča údolí (Bovec / Kobarid)<span
+                                    >Tyrkysová řeka, malé soutěsky, rafting nebo
+                                    klidné koupání u Tolmina. Výjezd přes Vršič
+                                    — 50 zatáček nahoru.</span
+                                >
+                            </div>
+                            <div class="pick-meta">1,5 h · celý den</div>
+                        </div>
+                        <div class="pick">
+                            <span class="pick-tag tag-kids"
+                                >Pokud nestihnete cestou</span
+                            >
+                            <div class="pick-name">
+                                Postojna + Predjama (záloha)<span
+                                    >Pokud cestou tam nezbylo místo. Ze Štanjelu
+                                    / Brdy 1 h.</span
+                                >
+                            </div>
+                            <div class="pick-meta">1 h · celý den</div>
+                        </div>
+                        <div class="pick">
+                            <span class="pick-tag tag-wine">Místní</span>
+                            <div class="pick-name">
+                                Vinařství v Brdě — degustace<span
+                                    >Movia (Ceglo) · Klet Brda (Dobrovo) · Kabaj
+                                    (Šlovrenc) · Erzetič · Marjan Simčič.
+                                    Rezervace předem nutná v sezóně.</span
+                                >
+                            </div>
+                            <div class="pick-meta">15 min · 2–3 h</div>
+                        </div>
+                        <div class="pick">
+                            <span class="pick-tag tag-culture">Volitelné</span>
+                            <div class="pick-name">
+                                Lipica · hřebčín lipicánských koní<span
+                                    >Bílí koně Habsburků, jezdí se na ně dodnes.
+                                    Pro děti vizuálně silné.</span
+                                >
+                            </div>
+                            <div class="pick-meta">50 min · 2 h</div>
+                        </div>
+                    </div>
+
+                    <div class="checklist" style="margin-top: 32px">
+                        <h4>Před cestou ověřit u vily</h4>
+                        <ul>
+                            <li>
+                                Bazén je <b>privátní, ne sdílený</b> —
+                                explicitně si to nech napsat (mailem).
+                            </li>
+                            <li>
+                                Celý objekt v privátním pronájmu — ne jen
+                                apartmán v rámci vily, ne ubytování typu B&amp;B
+                                s další rodinou.
+                            </li>
+                            <li>
+                                Klimatizace ve všech ložnicích (vrchol července
+                                v Brdě je 28–32 °C).
+                            </li>
+                            <li>
+                                Kuchyně je plně vybavená — pánev, hrnce, nože,
+                                talíře, sklenice na víno (důležité).
+                            </li>
+                            <li>
+                                Gril — plyn nebo dřevěné uhlí, kde se kupuje,
+                                kde se nakládá popel.
+                            </li>
+                            <li>Wifi, parkování (zdarma, počet aut).</li>
+                            <li>
+                                Pokud děti neplavou — oplocení / plachta na
+                                bazén.
+                            </li>
+                            <li>
+                                Kauce (typicky 300–500 €), platba v hotovosti
+                                při příjezdu vs převodem.
+                            </li>
+                            <li>Nejbližší obchod, lékárna, zubař, plovárna.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <div class="transit">
+                <div class="transit-label">Přejezd · den 11 · čt 30.7.</div>
+                <h3 class="transit-title">
+                    Vila → Podersdorf · 480 km · 5 h (nejdelší den, ale s
+                    prohlídkou)
+                </h3>
+                <div class="transit-stops">
+                    <div class="transit-stop">
+                        <div class="transit-when">poledne</div>
+                        <div class="transit-content">
+                            <b>Klagenfurt — Minimundus + Wörthersee</b>Park 180
+                            modelů světa pro děti. Pokud zbude čas a chuť,
+                            koupání ve Wörthersee (až 27 °C).
+                        </div>
+                    </div>
+                    <div class="transit-stop">
+                        <div class="transit-when">večer</div>
+                        <div class="transit-content">
+                            <b>Příjezd Podersdorf</b>Checkin, krátká procházka k
+                            jezeru, večeře v některém Heurigeru.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============ ZÁKLADNA 4: PODERSDORF ============ -->
+            <section class="base base--lake" id="podersdorf">
+                <div class="base-header">
+                    <div>
+                        <div class="base-day">Den 11–12 · čt–pá 30–31.7.</div>
+                        <div class="base-day-num">04</div>
+                    </div>
+                    <div>
+                        <span class="base-region" style="color: var(--olive)"
+                            >Rakousko · Burgenland</span
+                        >
+                        <h2 class="base-title">
+                            Stepní jezero, <em>jiná atmosféra</em>
+                        </h2>
+                    </div>
+                    <div class="base-meta">
+                        <div class="base-nights">2 noci</div>
+                        <div>—</div>
+                        <div>—</div>
+                    </div>
+                </div>
+                <div class="base-content">
+                    <p class="base-lead">
+                        Po týdnu ve vile rozumný kontrast: stepní jezero,
+                        vinařský Burgenland, paneláky a typický rakouský klid.
+                        Pro děti Family Park.
+                    </p>
+                    <div class="picks">
+                        <div class="pick">
+                            <span class="pick-tag tag-kids">Děti</span>
+                            <div class="pick-name">
+                                Family Park St. Margarethen<span
+                                    >Největší zábavní park v Rakousku. Vstup ~38
+                                    €/os., děti pod 90 cm zdarma.</span
+                                >
+                            </div>
+                            <div class="pick-meta">celý den · ~150 €</div>
+                        </div>
+                        <div class="pick">
+                            <span class="pick-tag tag-nature">Aktivně</span>
+                            <div class="pick-name">
+                                Cyklotrasa kolem jezera<span
+                                    >Rovina, půjčovna kol v Podersdorfu, trajekt
+                                    přes jezero. Lze dělat půlokruh.</span
+                                >
+                            </div>
+                            <div class="pick-meta">3–6 h</div>
+                        </div>
+                        <div class="pick">
+                            <span class="pick-tag tag-culture">Krátké</span>
+                            <div class="pick-name">
+                                Rust — město čápů<span
+                                    >Hnízda na komínech, klid, vinařství. Půl
+                                    den.</span
+                                >
+                            </div>
+                            <div class="pick-meta">2 h</div>
+                        </div>
+                        <div class="pick">
+                            <span class="pick-tag tag-wine">Večer</span>
+                            <div class="pick-name">
+                                Heuriger v Burgenlandu<span
+                                    >Domácí víno + studené chody
+                                    (zwiebelrostbraten, bramboráky). Atmosféra
+                                    venkovská.</span
+                                >
+                            </div>
+                            <div class="pick-meta">vlastní výběr</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="transit">
+                <div class="transit-label">Přejezd · den 13 · so 1.8.</div>
+                <h3 class="transit-title">
+                    Podersdorf → Lednice · 200 km · 2 h
+                </h3>
+                <div class="transit-stops">
+                    <div class="transit-stop">
+                        <div class="transit-when">odpol.</div>
+                        <div class="transit-content">
+                            <b>Příjezd Lednice</b>Checkin do penzionu, prohlídka
+                            zámku nebo lodička na Zámeckém rybníku k Minaretu.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============ ZÁKLADNA 5: LEDNICE ============ -->
+            <section class="base base--lednice" id="lednice">
+                <div class="base-header">
+                    <div>
+                        <div class="base-day">Den 13 · so 1.8.</div>
+                        <div class="base-day-num">05</div>
+                    </div>
+                    <div>
+                        <span
+                            class="base-region"
+                            style="color: var(--terracotta)"
+                            >Česko · Lednicko-valtický areál</span
+                        >
+                        <h2 class="base-title">Měkké <em>přistání</em> doma</h2>
+                    </div>
+                    <div class="base-meta">
+                        <div class="base-nights">1 noc</div>
+                        <div>—</div>
+                        <div>—</div>
+                    </div>
+                </div>
+                <div class="base-content">
+                    <p class="base-lead">
+                        UNESCO areál Lichtenštejnů — rozdrobit poslední napětí
+                        na zámku, lodičkou a procházkou kolem rybníků. Druhý den
+                        už jen Lednice → Ostrava.
+                    </p>
+                    <div class="picks">
+                        <div class="pick">
+                            <span class="pick-tag tag-culture">Klasika</span>
+                            <div class="pick-name">
+                                Zámek Lednice — prohlídka<span
+                                    >Glazované zámecké interiéry, skleník s
+                                    exotikou. Děti dají zkrácenou
+                                    prohlídku.</span
+                                >
+                            </div>
+                            <div class="pick-meta">1,5 h</div>
+                        </div>
+                        <div class="pick">
+                            <span class="pick-tag tag-nature">Voda</span>
+                            <div class="pick-name">
+                                Lodička k Minaretu<span
+                                    >Klid, kachny, romantické. Hodina +
+                                    návrat.</span
+                                >
+                            </div>
+                            <div class="pick-meta">2 h</div>
+                        </div>
+                        <div class="pick">
+                            <span class="pick-tag tag-wine">Volitelné</span>
+                            <div class="pick-name">
+                                Valtice — vinný sklep<span
+                                    >Salon vín ČR — hromadná degustace TOP 100
+                                    vín z ČR. Pro dospělé klid.</span
+                                >
+                            </div>
+                            <div class="pick-meta">2 h</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BUDGET -->
+            <section class="section" id="rozpocet">
+                <div class="section-eyebrow">Rozpočet</div>
+                <h2 class="section-title">Co to bude <em>stát</em></h2>
+                <p class="section-intro">
+                    Hrubý odhad pro rodinu 2+2, 13 nocí, vrchol sezóny. Vila je
+                    dominantní položka — zbytek je menší než plný okruh, protože
+                    méně vstupů a méně nocí na drahém pobřeží.
+                </p>
+
+                <div class="chart-grid">
+                    <div class="chart-card">
+                        <h3>Rozdělení výdajů</h3>
+                        <div class="chart-sub">Odhad · EUR</div>
+                        <div class="chart-canvas-wrap">
+                            <canvas id="pieChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Per kategorie</h3>
+                        <div class="chart-sub">Vodorovně · EUR</div>
+                        <div class="chart-canvas-wrap">
+                            <canvas id="barChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card wide">
+                        <h3>Per základna</h3>
+                        <div class="chart-sub">
+                            Stacked · ubytování + strava + vstupy + doprava
+                        </div>
+                        <div class="chart-canvas-wrap">
+                            <canvas id="stackChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="budget-total">
+                    <div class="budget-total-label">
+                        Celkový hrubý odhad<small
+                            >2 dospělí + 2 děti · 13 nocí</small
+                        >
+                    </div>
+                    <div class="budget-total-num">
+                        ~3 950 €<small>~96 400 Kč</small>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="footer">
+                <span>Cestovní deník № 5 · Chill verze · 2026</span>
+                <em
+                    >Méně přejíždění, více plavání.
+                    <a
+                        href="index.html"
+                        style="
+                            color: var(--vine);
+                            text-decoration: none;
+                            border-bottom: 1px solid var(--vine);
+                        "
+                        >↗ plný okruh</a
+                    ></em
+                >
+                <span>Aktualizováno květen 2026</span>
+            </footer>
+        </main>
+
+        <script>
+            // ============ MAP ============
+            const map = L.map("leaflet-map", {
+                zoomControl: true,
+                scrollWheelZoom: true,
+            }).setView([46.4, 14.2], 7);
+            L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+                {
+                    attribution:
+                        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                    maxZoom: 19,
+                },
+            ).addTo(map);
+
+            const colors = {
+                base: "#2A6276",
+                detour: "#A14F2C",
+                villa: "#6E2B4E",
+                daytrip: "#5C6B2E",
+                endpoint: "#1F2622",
+            };
+
+            function makeIcon(color, label) {
+                return L.divIcon({
+                    className: "custom-marker",
+                    html: `<div style="background:${color};width:28px;height:28px;border-radius:50%;border:3px solid #FBF6E8;box-shadow:0 2px 6px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;color:#FBF6E8;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;">${label}</div>`,
+                    iconSize: [28, 28],
+                    iconAnchor: [14, 14],
+                });
+            }
+
+            const points = [
+                // Bases
+                {
+                    lat: 49.8347,
+                    lng: 18.282,
+                    type: "endpoint",
+                    label: "0",
+                    name: "Ostrava",
+                    meta: "Start &amp; cíl",
+                    desc: "Den 1 odjezd, den 14 návrat.",
+                },
+                {
+                    lat: 48.1845,
+                    lng: 16.3122,
+                    type: "base",
+                    label: "1",
+                    name: "Vídeň — Schönbrunn",
+                    meta: "Den 1 · 1 noc",
+                    desc: "Měkké spuštění. ZOO + zahrady.",
+                },
+                {
+                    lat: 46.3683,
+                    lng: 14.1146,
+                    type: "base",
+                    label: "2",
+                    name: "Bled",
+                    meta: "Den 2–3 · 2 noci",
+                    desc: "Jezero, hrad, Vintgar nebo Bohinj.",
+                },
+                {
+                    lat: 45.9986,
+                    lng: 13.5639,
+                    type: "base",
+                    label: "3",
+                    name: "Vila Brda ★",
+                    meta: "Den 4–10 · 7 nocí · CORE",
+                    desc: "Privátní vila s bazénem, gril, víno, hudba.",
+                },
+                {
+                    lat: 47.8472,
+                    lng: 16.8408,
+                    type: "base",
+                    label: "4",
+                    name: "Podersdorf am See",
+                    meta: "Den 11–12 · 2 noci",
+                    desc: "Neziderské jezero, Family Park.",
+                },
+                {
+                    lat: 48.8,
+                    lng: 16.8056,
+                    type: "base",
+                    label: "5",
+                    name: "Lednice",
+                    meta: "Den 13 · 1 noc",
+                    desc: "UNESCO, zámek, lodička.",
+                },
+
+                // Transit detours
+                {
+                    lat: 47.0707,
+                    lng: 15.4395,
+                    type: "detour",
+                    label: "D",
+                    name: "Graz",
+                    meta: "Zastávka den 2",
+                    desc: "UNESCO staré město, Schloßberg, oběd na náměstí.",
+                },
+                {
+                    lat: 45.7833,
+                    lng: 14.2031,
+                    type: "detour",
+                    label: "D",
+                    name: "Postojna jáma + Predjama",
+                    meta: "Zastávka den 4",
+                    desc: "Combo lístek 2+2 ~131 €. Časový slot online.",
+                },
+                {
+                    lat: 46.6168,
+                    lng: 14.2655,
+                    type: "detour",
+                    label: "D",
+                    name: "Klagenfurt — Minimundus",
+                    meta: "Zastávka den 11",
+                    desc: "Park 180 modelů světa, koupání v alpském jezeře.",
+                },
+
+                // Villa candidates
+                {
+                    lat: 45.9854,
+                    lng: 13.545,
+                    type: "villa",
+                    label: "★",
+                    name: "Villa EVA · Kozana",
+                    meta: "Goriška Brda · ~400 €/noc",
+                    desc: "3 ložnice, sauna, vířivka, výhled vinic. Featured.",
+                },
+                {
+                    lat: 45.9931,
+                    lng: 13.5125,
+                    type: "villa",
+                    label: "★",
+                    name: "Alma Vista · Vipolže",
+                    meta: "Brda · ~250–350 €/noc",
+                    desc: "Slovenia Green, design, umění.",
+                },
+                {
+                    lat: 46.0064,
+                    lng: 13.5167,
+                    type: "villa",
+                    label: "★",
+                    name: "Villa Zerou · Kojsko",
+                    meta: "Brda · ~300–400 €/noc",
+                    desc: "Moderní luxus, panorama vinic.",
+                },
+                {
+                    lat: 45.8514,
+                    lng: 13.7867,
+                    type: "villa",
+                    label: "★",
+                    name: "Vila Mravljevi · Branik",
+                    meta: "Vipava · ~250–350 €/noc",
+                    desc: "4 ložnice, sauna, ceramic grill — největší rezerva. Featured.",
+                },
+                {
+                    lat: 45.7825,
+                    lng: 13.7553,
+                    type: "villa",
+                    label: "★",
+                    name: "Villa Fabiani · Kobdilj",
+                    meta: "Kras · ~250–350 €/noc",
+                    desc: "Renovovaný panský dům s bazénem.",
+                },
+                {
+                    lat: 45.5444,
+                    lng: 13.7975,
+                    type: "villa",
+                    label: "★",
+                    name: "Villa Lavanda · Fijeroga",
+                    meta: "Slov. Istrie · ~200–300 €/noc",
+                    desc: "Istrijský kámen, vinice, blízko moře.",
+                },
+
+                // Daytrips from villa
+                {
+                    lat: 45.7022,
+                    lng: 13.7129,
+                    type: "daytrip",
+                    label: "V",
+                    name: "Trieste + Miramare",
+                    meta: "Daytrip · 45 min",
+                    desc: "Habsburský přístav nad mořem.",
+                },
+                {
+                    lat: 45.77,
+                    lng: 13.3722,
+                    type: "daytrip",
+                    label: "V",
+                    name: "Aquileia + Grado",
+                    meta: "Daytrip · 50 min",
+                    desc: "UNESCO mozaiky + písečná pláž s mělčinou.",
+                },
+                {
+                    lat: 45.5285,
+                    lng: 13.5683,
+                    type: "daytrip",
+                    label: "V",
+                    name: "Piran + Portorož",
+                    meta: "Daytrip · 1 h",
+                    desc: "Slovinská benátská perla, věž San Giorgio.",
+                },
+                {
+                    lat: 46.0925,
+                    lng: 13.4317,
+                    type: "daytrip",
+                    label: "V",
+                    name: "Cividale del Friuli",
+                    meta: "Daytrip · 40 min",
+                    desc: "UNESCO langobardské městečko.",
+                },
+                {
+                    lat: 46.3389,
+                    lng: 13.5547,
+                    type: "daytrip",
+                    label: "V",
+                    name: "Soča Bovec/Kobarid",
+                    meta: "Daytrip · 1.5 h",
+                    desc: "Tyrkysová řeka, soutěsky, rafting.",
+                },
+            ];
+
+            const routeLine = [
+                [49.8347, 18.282],
+                [48.1845, 16.3122],
+                [47.0707, 15.4395],
+                [46.3683, 14.1146],
+                [45.7833, 14.2031],
+                [45.9986, 13.5639],
+                [46.6168, 14.2655],
+                [47.8472, 16.8408],
+                [48.8, 16.8056],
+                [49.8347, 18.282],
+            ];
+
+            L.polyline(routeLine, {
+                color: "#1F2622",
+                weight: 3,
+                opacity: 0.5,
+                dashArray: "8, 6",
+                lineCap: "round",
+            }).addTo(map);
+
+            points.forEach((p) => {
+                const color = colors[p.type] || colors.base;
+                const marker = L.marker([p.lat, p.lng], {
+                    icon: makeIcon(color, p.label),
+                }).addTo(map);
+                marker.bindPopup(
+                    `<b>${p.name}</b>${p.desc}<div class="pop-meta">${p.meta}</div>`,
+                );
+            });
+
+            map.fitBounds(L.latLngBounds(routeLine).pad(0.05));
+
+            // ============ FUEL ============
+            const countries = [
+                { code: "CZ", flag: "🇨🇿", name: "Česko", km: 380, price: 1.97 },
+                {
+                    code: "AT",
+                    flag: "🇦🇹",
+                    name: "Rakousko",
+                    km: 750,
+                    price: 2.2,
+                },
+                {
+                    code: "SI",
+                    flag: "🇸🇮",
+                    name: "Slovinsko",
+                    km: 520,
+                    price: 1.62,
+                },
+                {
+                    code: "IT",
+                    flag: "🇮🇹",
+                    name: "Itálie",
+                    km: 150,
+                    price: 2.05,
+                },
+            ];
+            const totalKm0 = countries.reduce((s, c) => s + c.km, 0);
+
+            const consEl = document.getElementById("cons");
+            const kmEl = document.getElementById("km");
+            const surchEl = document.getElementById("surch");
+            const consVal = document.getElementById("cons-val");
+            const kmVal = document.getElementById("km-val");
+            const surchVal = document.getElementById("surch-val");
+            const breakdownEl = document.getElementById("fuel-breakdown");
+            const totalEl = document.getElementById("fuel-total");
+            const summaryEl = document.getElementById("fuel-summary");
+
+            function eurToCzk(e) {
+                return Math.round(e * 24.4);
+            }
+
+            function recalcFuel() {
+                const cons = parseFloat(consEl.value);
+                const totalKm = parseFloat(kmEl.value);
+                const surch = parseFloat(surchEl.value);
+                const ratio = totalKm / totalKm0;
+                let totalLit = 0,
+                    totalCost = 0;
+                let html = "";
+                countries.forEach((c) => {
+                    const km = c.km * ratio;
+                    const lit = (km * cons) / 100;
+                    const cost = lit * (c.price + surch);
+                    totalLit += lit;
+                    totalCost += cost;
+                    html += `
+      <div class="fuel-country">
+        <div class="flag">${c.flag}</div>
+        <div class="name">${c.name}</div>
+        <div class="km">${km.toFixed(0)} km</div>
+        <div class="cost">${cost.toFixed(0)} €</div>
+        <div class="ppl">${(c.price + surch).toFixed(2)} €/l · ${lit.toFixed(0)} l</div>
+      </div>`;
+                });
+                breakdownEl.innerHTML = html;
+                consVal.textContent = cons.toFixed(1);
+                kmVal.textContent = totalKm.toFixed(0);
+                surchVal.textContent = surch.toFixed(2);
+                const totalRound = Math.round(totalCost);
+                totalEl.innerHTML = `~${totalRound} €<small>~${eurToCzk(totalRound).toLocaleString("cs-CZ")} Kč</small>`;
+                summaryEl.textContent = `~${totalLit.toFixed(0)} l · ~${totalRound} €`;
+            }
+            [consEl, kmEl, surchEl].forEach((el) =>
+                el.addEventListener("input", recalcFuel),
+            );
+            recalcFuel();
+
+            // ============ CHARTS ============
+            Chart.defaults.font.family = "'IBM Plex Sans', sans-serif";
+            Chart.defaults.color = "#4A5550";
+            Chart.defaults.font.size = 12;
+
+            const palette = {
+                vila: "#6E2B4E",
+                ubyt: "#2E5F4E",
+                strava: "#A14F2C",
+                vstupy: "#B8722C",
+                doprava: "#2A6276",
+                rezerva: "#C99A3D",
+            };
+
+            const budget = {
+                vila: 1925, // 7 nocí × 275 € průměr
+                ubyt: 580, // 6 nocí ostatních (Vídeň 1, Bled 2, Podersdorf 2, Lednice 1) × ~95
+                strava: 750, // jíme často doma ve vile, ne každý den restaurace
+                vstupy: 450, // ZOO + Bled + Postojna + Family Park + Aquileia
+                doprava: 245, // palivo
+                rezerva: 0,
+            };
+            const totalBudget = Object.values(budget).reduce(
+                (s, v) => s + v,
+                0,
+            );
+
+            new Chart(document.getElementById("pieChart"), {
+                type: "doughnut",
+                data: {
+                    labels: [
+                        "Vila (7 nocí)",
+                        "Další ubytování",
+                        "Strava",
+                        "Vstupy",
+                        "Palivo",
+                    ],
+                    datasets: [
+                        {
+                            data: [
+                                budget.vila,
+                                budget.ubyt,
+                                budget.strava,
+                                budget.vstupy,
+                                budget.doprava,
+                            ],
+                            backgroundColor: [
+                                palette.vila,
+                                palette.ubyt,
+                                palette.strava,
+                                palette.vstupy,
+                                palette.doprava,
+                            ],
+                            borderColor: "#FBF6E8",
+                            borderWidth: 3,
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: "55%",
+                    plugins: {
+                        legend: {
+                            position: "bottom",
+                            labels: {
+                                padding: 12,
+                                font: { size: 11 },
+                                boxWidth: 14,
+                            },
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => {
+                                    const v = ctx.parsed;
+                                    const pct = (
+                                        (v / totalBudget) *
+                                        100
+                                    ).toFixed(1);
+                                    return ` ${ctx.label}: ${v} € (${pct} %)`;
+                                },
+                            },
+                        },
+                    },
+                },
+            });
+
+            new Chart(document.getElementById("barChart"), {
+                type: "bar",
+                data: {
+                    labels: [
+                        "Vila (7 nocí)",
+                        "Další ubytování",
+                        "Strava",
+                        "Vstupy",
+                        "Palivo",
+                    ],
+                    datasets: [
+                        {
+                            label: "EUR",
+                            data: [
+                                budget.vila,
+                                budget.ubyt,
+                                budget.strava,
+                                budget.vstupy,
+                                budget.doprava,
+                            ],
+                            backgroundColor: [
+                                palette.vila,
+                                palette.ubyt,
+                                palette.strava,
+                                palette.vstupy,
+                                palette.doprava,
+                            ],
+                            borderRadius: 4,
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: "y",
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) =>
+                                    ` ${ctx.parsed.x} € (${((ctx.parsed.x / totalBudget) * 100).toFixed(1)} %)`,
+                            },
+                        },
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: "#E8DFC8" },
+                            ticks: { callback: (v) => v + " €" },
+                        },
+                        y: { grid: { display: false } },
+                    },
+                },
+            });
+
+            const baseData = {
+                labels: [
+                    "Vídeň (1n)",
+                    "Bled (2n)",
+                    "Vila Brda (7n)",
+                    "Podersdorf (2n)",
+                    "Lednice (1n)",
+                ],
+                ubyt: [150, 320, 1925, 220, 90],
+                vstupy: [60, 140, 60, 180, 30],
+                strava: [80, 180, 280, 140, 50],
+                doprava: [60, 60, 35, 65, 25],
+            };
+            new Chart(document.getElementById("stackChart"), {
+                type: "bar",
+                data: {
+                    labels: baseData.labels,
+                    datasets: [
+                        {
+                            label: "Ubytování",
+                            data: baseData.ubyt,
+                            backgroundColor: palette.vila,
+                        },
+                        {
+                            label: "Vstupy",
+                            data: baseData.vstupy,
+                            backgroundColor: palette.vstupy,
+                        },
+                        {
+                            label: "Strava",
+                            data: baseData.strava,
+                            backgroundColor: palette.strava,
+                        },
+                        {
+                            label: "Doprava",
+                            data: baseData.doprava,
+                            backgroundColor: palette.doprava,
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: "bottom",
+                            labels: {
+                                padding: 12,
+                                font: { size: 11 },
+                                boxWidth: 14,
+                            },
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) =>
+                                    ` ${ctx.dataset.label}: ${ctx.parsed.y} €`,
+                                footer: (items) =>
+                                    "Σ " +
+                                    items.reduce((s, i) => s + i.parsed.y, 0) +
+                                    " €",
+                            },
+                        },
+                    },
+                    scales: {
+                        x: { stacked: true, grid: { display: false } },
+                        y: {
+                            stacked: true,
+                            grid: { color: "#E8DFC8" },
+                            ticks: { callback: (v) => v + " €" },
+                        },
+                    },
+                },
+            });
+        </script>
+    </body>
+</html>
